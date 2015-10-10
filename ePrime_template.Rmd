@@ -1,7 +1,7 @@
 ---
 title: "ePrime Template"
 author: "Henry G Wolf VII"
-date: “10 October 2015"
+date: "10 October 2015"
 output: html_document
 ---
 
@@ -9,18 +9,23 @@ output: html_document
 # install and load packages
 suppressMessages(library(dplyr))
 
-# read the txt file from ePrime
-# IMPORTANT: output for Statview/SPSS, no Unicode
+# read the txt file from ePrime (output for Statview/SPSS, no Unicode)
 data <- read.delim("MNW2.FULL.txt", skip = 1)
 
 # convert the data fram to a local data frame
 data <- tbl_df(data)
 
 # give adequate column names
-colnames(data) <- c("A1", "id", "B1", "B2", "B3", "B4", "B5", "date", "C1", "C2", "C3", "C4", "C5", "balancing", "D1", "D2", "practice", "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "baseword", "F1", "F2", "F3", "lexicality", "G1", "G2", "G3", "G4", "G5", "stimset", "H1", "H2", "trialorderA", "I1", "I2", "trialorderB", "stimtype", "stimulus", "J1", "J2", "J3", "J4", "accuracy", "K1", "K2", "RT", "L1", "L2")
+colnames(data) <- c("A1", "id", "B1", "B2", "B3", "B4", "B5", "date", "C1", "C2", "C3", "C4",
+                    "C5", "balancing", "D1", "D2", "practice", "E1", "E2", "E3", "E4", "E5",
+                    "E6", "E7", "E8", "baseword", "F1", "F2", "F3", "lexicality", "G1", "G2",
+                    "G3", "G4", "G5", "stimset", "H1", "H2", "trialorderA", "I1", "I2",
+                    "trialorderB", "stimtype", "stimulus", "J1", "J2", "J3", "J4",
+                    "accuracy", "K1", "K2", "RT", "L1", "L2")
 
 # select the columns that are important
-data <- select(data, id, balancing, practice, baseword, lexicality, stimset, trialorderA, trialorderB, stimtype, stimulus, accuracy, RT)
+data <- select(data, id, balancing, practice, baseword, lexicality, stimset, trialorderA,
+               trialorderB, stimtype, stimulus, accuracy, RT)
 
 # generate the previous RT column using the lag function
 data <- data %>% mutate(prevRT = lag(RT))
@@ -40,7 +45,9 @@ data <- data %>% mutate(toB = ifelse(is.na(trialorderB), 0, trialorderB))
 data <- data %>% mutate(trialorder = toA + toB)
 
 # select the important columns
-data <- select(data, id, balancing, trialorder, lexicality, baseword, set = stimset, type = stimtype, stim = stimulus, acc = accuracy, err = error, prt = prevRT, rt = RT.hit)
+data <- select(data, id, balancing, trialorder, lexicality, baseword, set = stimset,
+               type = stimtype, stim = stimulus, acc = accuracy, err = error, prt = prevRT,
+               rt = RT.hit)
 
 # change variables to their correct types
 data$id <- as.factor(data$id)
@@ -78,7 +85,8 @@ data <- data %>% group_by(id) %>%
 data <- data %>% mutate(rt.winsor = ifelse(rt < rt.upper, rt, rt.upper))
 
 # select the important columns
-data <- select(data, id, balancing, trialorder, lexicality, baseword, type, stim, err, prt = prt.winsor, rt = rt.winsor)
+data <- select(data, id, balancing, trialorder, lexicality, baseword, type, stim, err,
+               prt = prt.winsor, rt = rt.winsor)
 
 # log transform the RT data
 data <- data %>% mutate(prt.log = log(prt))
