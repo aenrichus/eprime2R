@@ -1,7 +1,7 @@
 ---
 title: "ePrime Template"
 author: "Henry G Wolf VII"
-date: "8 October 2015"
+date: “10 October 2015"
 output: html_document
 ---
 
@@ -9,7 +9,8 @@ output: html_document
 # install and load packages
 suppressMessages(library(dplyr))
 
-# read the txt file from ePrime (output for Statview/SPSS, no Unicode)
+# read the txt file from ePrime
+# IMPORTANT: output for Statview/SPSS, no Unicode
 data <- read.delim("MNW2.FULL.txt", skip = 1)
 
 # convert the data fram to a local data frame
